@@ -73,6 +73,10 @@ const Events = () => {
         //history.push("/events");
     }
 
+    function reloadPage() {
+        window.location.reload();
+    }
+
     const descStyle = {
         marginTop: "10px",
         fontSize: "12px"
@@ -123,7 +127,7 @@ const Events = () => {
             )}
           </div>
 
-          <Login open={loginOpen} setOpen={setLoginOpen} refresh={refresh} setRefresh={setRefresh}/>
+          <Login open={loginOpen} setOpen={setLoginOpen} refresh={refresh} setRefresh={setRefresh} refreshPage={reloadPage}/>
         </div>
 
         

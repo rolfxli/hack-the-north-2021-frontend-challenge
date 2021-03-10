@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { handleLogin } from '../utils/auth';
-import {Card, PageHeader, Button, Modal, Form, Input} from 'antd';
+import {Card, PageHeader, Button, Modal, Form, Input, Alert} from 'antd';
 
 const Login = (props) => {
     const history = useHistory();
@@ -10,16 +10,6 @@ const Login = (props) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
-
-    // function handleEvent(event) {
-    //     setError("")
-    //     const { name, value } = event.target
-    //     setLogininfo((preState) => ({
-    //       ...preState,
-    //       [name]: value,
-    //     }));
-    // }
 
     /*
     * handle logging in a user
@@ -35,6 +25,7 @@ const Login = (props) => {
             if (res) {
                 //props.setRefresh(!props.refresh);
                 history.push("/events");
+                props.refreshPage();
             } else {
                 setError("Invalid Username or Password")
                 setLoading(false)

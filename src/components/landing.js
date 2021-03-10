@@ -8,13 +8,20 @@ import { handleLogout } from '../utils/auth';
 const Landing = () => {
     const [loginOpen, setLoginOpen] = useState(false);
     const [refresh, setRefresh] = useState(false);
+    const [loggedIn, setloggedIn] = useState(false);
 
-    const history = useHistory();
+    function isLoggedIn() {
+        var logged = cookie.get("token");
+        if (logged == null || logged == "validToken") {
+            return true;
+        }
+        return false;
+    }
 
 
     function logout() {
         handleLogout();
-        history.push("/events");
+        window.location.reload();
     }
 
     return (
@@ -28,7 +35,7 @@ const Landing = () => {
                 <Button key="login" style={{backgroundColor:"#f2f5fa", marginRight:"25px"}}  onClick={() => setLoginOpen(true)}>Login</Button>
               ]}
         />
-        <Login open={loginOpen} setOpen={setLoginOpen} refresh={refresh} setRefresh={setRefresh}/>
+        <Login open={loginOpen} setOpen={setLoginOpen} refresh={refresh}/>
         </div>
         
     );
