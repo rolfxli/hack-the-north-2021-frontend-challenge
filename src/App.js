@@ -5,6 +5,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import Events from './components/events';
 import Login from './components/login';
 import Landing from './components/landing';
+import 'antd/dist/antd.css';
 
 class App extends Component {
   render() {

@@ -1,7 +1,12 @@
-import {React, useState, useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useHistory } from "react-router-dom";
 import getEvents from '../utils/api'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
+import { Header, Image, Container } from 'semantic-ui-react'
+import {Card, PageHeader, Button, Modal, Form, Input} from 'antd';
+import cookie from "js-cookie";
+import img from "../assets/defaultPFP.jpg"
+import Login from "./login";
+import { handleLogout } from '../utils/auth';
 
 const Events = () => {
     // initial state with array of project information
@@ -10,21 +15,14 @@ const Events = () => {
     const history = useHistory()
   
     // // initialize state variables to be empty array of projects
-    // // projects: array of {'name', 'mostRecentStatus'}
     const [events, setEvents] = useState(initialEvents)
-    // const [loading, setLoading] = useState(true);
-    // const [modal, setModal] = useState(false)
-    // const [newProjectName, setNewProjectName] = useState(initialNewProjectName)
-  
-    // const toggle = () => {
-    //   setModal(!modal)
-    //   setNewProjectName("")
-    // }
+    const [loginOpen, setLoginOpen] = useState(false)
+    const [refresh, setRefresh] = useState(false)
+
   
     // use effect for functional component
     useEffect(() => {
         getCorrectEvents();
-        //console.log(events)
     }, []);
 
     async function getCorrectEvents() {
@@ -55,89 +53,80 @@ const Events = () => {
         var fulldate = hours + ':' + minutes.substr(-2) +' '+ month + ' ' + day + ' ' + year + ' '
         return fulldate;
         };
-    
-    // async function addProject() {
-    //   console.log(newProjectName)
-    //   var token = cookie.get('token')
-    //   var userid = cookie.get('userid')
-    //   if (newProjectName !== "") {
-    //     const url = `${process.env.REACT_APP_BASEURL}users/${userid}/projects?token=${token}`
-    //     const payload = {
-    //       "projectname": newProjectName
-    //     }
-    //     axios
-    //       .all([
-    //         axios.post(url, payload)
-    //       ])
-    //       .then(
-    //         axios.spread(() => {
-    //           getProjects()
-    //         }),
-    //       )
-    //       .catch((err) => {
-    //         console.log(err)
-    //       })
-    //       .finally(
-    //         toggle()
-    //       )
-    //   }
-    // }
-  
-    // function deleteProject(event, projectid) {
-    //   const token = cookie.get('token')
-    //   // delete the project
-    //   axios.delete(`${process.env.REACT_APP_BASEURL}projects/${projectid}?token=${token}`)
-    //   .then(
-    //     setProjects(projects.filter(
-    //         function(project) { 
-    //             return project.projectid !== projectid 
-    //         }
-    //     ))
-    //   )
-    //   .catch((err) => {
-    //     console.error(err)
-    //   });
-    //   event.stopPropagation()
-    // }
-  
-    // function handleEvent(event) {
-    //   const { value } = event.target
-    //   setNewProjectName(value)
-    //   console.log(newProjectName)
-    // } onClick={() => history.push(`/login`)}
-    
+
+    function getLink(privateURL, publicURL) {
+        var res = cookie.get("token");
+        if (res == null || res != "validToken") {
+            return publicURL;
+        }
+        return privateURL;
+    }
+
+    function getImgLink(link) {
+        return link ? link : img;
+    }
+
+    function logout() {
+        handleLogout();
+        console.log("logging out")
+        window.location.reload();
+        //history.push("/events");
+    }
+
+    const descStyle = {
+        marginTop: "10px",
+        fontSize: "12px"
+    };
+
+    const noSpaceStyle = {
+        margin: "0px",
+        fontSize: "12px"
+    }
+
+    const paddedHeader = {
+        marginTop: "5px",
+        fontSize: "12px"
+    } //#a4effc #74d9f7
+
     return (
-        <>
-        <h>Events</h>
-        <div className='eventList'>
+        <div style={{display:"flex"}}>
+        <PageHeader
+            className="site-page-header"
+            title={<span style={{fontSize:"25px", marginLeft:"25px"}}>Events</span>}
+            style={{position:"fixed", backgroundColor:"#a4effc", width:"100%", zIndex:"1"}}
+            extra={[
+                <Button key="logout" style={{backgroundColor:"#f2f5fa", marginRight:"25px"}}  onClick={() => logout()}>Logout</Button>,
+                <Button key="login" style={{backgroundColor:"#f2f5fa", marginRight:"25px"}}  onClick={() => setLoginOpen(true)}>Login</Button>
+              ]}
+        />
+        <div className='eventList' style={{marginTop:"100px"}}>
             {events.map((ev) => 
-            <>
                 <div className='individualEvent'>
+                <Card title={ev.name} style={{padding:"10px",marginLeft:"auto",marginRight:"auto", width:"60%"}}>
                   <div className='floatleft'>
-                    <h5>{ev.name}</h5>
-                    <h6 className='event start time'>Start Time: {displayDate(ev.start_time)}</h6>
-                    <h6 className='event end time'>End Time: {displayDate(ev.end_time)}</h6>
-                    <h6 className='event description'>Description: {ev.description}</h6>
-                    <h6 className='event description'>Speakers: {ev.speakers.map((speaker) => <>
+                    <div className='eventId' style={noSpaceStyle}><span style={{fontWeight:"500"}}>Event ID:</span> {ev.id}</div>
+                    <div className='eventType' style={noSpaceStyle}><span style={{fontWeight:"500"}}>Event Type:</span> {ev.event_type}</div>
+                    <div className='eventTime' style={noSpaceStyle}><span style={{fontWeight:"500"}}>Time:</span> {displayDate(ev.start_time)} - {displayDate(ev.end_time)}</div>
+                    <p style={descStyle}>{ev.description}</p>
+                    <div className='eventDescription' style={noSpaceStyle}><span style={{fontWeight:"500"}}>Speakers:</span> {ev.speakers.map((speaker) => <>
                         <div className='floatleft'>
-                        <h className='speaker name'>{speaker.name}</h>
+                        <div className='speakerName' style={noSpaceStyle}>{speaker.name}</div>
                         <div>
-                            <img src={speaker.profile_pic} onerror="if (this.src != 'defaultPFP.jpg') this.src = 'defaultPFP.jpg';"   width="100" height="100"/>
+                            <img src={getImgLink(speaker.profile_pic)} style={{marginTop:"10px", marginBottom:"10px", marginLeft:"5px"}} width="100" height="100"/>
                         </div>
-                        </div></>)}</h6>
+                        </div></>)}</div>
+                    <a href={getLink(ev.private_url, ev.public_url)}>View Event</a>
+                    <div className='relatedEvents' style={paddedHeader}><span style={{fontWeight:"500"}}>Related Events:</span> {ev.related_events.toString()}</div>
                   </div>
-                  <div className="floatright">
-                      
-                      {/* <CButton onClick={(e) => deleteProject(e, project.projectid)} shape='pill' variant='outline' color='warning'>
-                        <CIcon style={{ color:"red",marginBottom: "4px"}} content={freeSet.cilTrash}></CIcon>
-                      </CButton> */}
-                  </div>
-                                                  
-                </div>                
-            </>
+                  </Card>                       
+                </div>           
             )}
           </div>
-        </>
+
+          <Login open={loginOpen} setOpen={setLoginOpen} refresh={refresh} setRefresh={setRefresh}/>
+        </div>
+
+        
         
     //   <>
     //   {loading ? (

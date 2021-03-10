@@ -1,34 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { handleLogin } from '../utils/auth';
+import {Card, PageHeader, Button, Modal, Form, Input} from 'antd';
 
-const Login = () => {
-    // return (
-    //     <div className="Login Page">
-    //         <p>
-    //             Login. </p>
-    //     </div>
-    // );
-
+const Login = (props) => {
     const history = useHistory();
 
-    // the initial values of the username and password
-    let initialLogin = {
-        username: "",
-        password: ""
-    }
-    const [logininfo, setLogininfo] = useState(initialLogin);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
-    function handleEvent(event) {
-        setError("")
-        const { name, value } = event.target
-        setLogininfo((preState) => ({
-          ...preState,
-          [name]: value,
-        }));
-    }
+
+    // function handleEvent(event) {
+    //     setError("")
+    //     const { name, value } = event.target
+    //     setLogininfo((preState) => ({
+    //       ...preState,
+    //       [name]: value,
+    //     }));
+    // }
 
     /*
     * handle logging in a user
@@ -39,10 +30,11 @@ const Login = () => {
     async function handleSubmit() {
         setError("")
         setLoading(true)
-        if (logininfo.username !== "" && logininfo.password !== "") {
-            var res = handleLogin(logininfo.username, logininfo.password);
+        if (username !== "" && password !== "") {
+            var res = handleLogin(username, password);
             if (res) {
-                history.push('events')
+                //props.setRefresh(!props.refresh);
+                history.push("/events");
             } else {
                 setError("Invalid Username or Password")
                 setLoading(false)
@@ -50,81 +42,38 @@ const Login = () => {
         }
     }
 
-    return (
-        <h>Login</h>
-        // <>
-        // <Header></Header>
-        // <br></br>
-        // <div className="hero section center-content illustration-section-01r" style={{marginTop: "15%"}}>
-        // <CContainer>
-        //     <CRow className="justify-content-center">
-        //     <CCol md="8">
-        //         <CCardGroup>
-        //         <CCard>
-        //             <CCardBody>
-        //             <CForm>
-        //                 <h2>Login to view Dashboard</h2>
-        //                 <br></br>
-        //                 <h6 color='white'>Email
-        //                 </h6>
-        //                 <CInputGroup className="mb-3">
-        //                 <CInput
-        //                     type="email"
-        //                     name="email"
-        //                     placeholder="Email"
-        //                     onChange={handleEvent}
-        //                     value={logininfo.email}
-        //                 />
+    let footer = (
+        <React.Fragment>
+            <Button key="back" onClick={() => {props.setOpen(false)}} style={{margin:"10px"}}>
+                Cancel
+            </Button>
+            <Button type="primary" key="back" onClick={() => {props.setOpen(false); handleSubmit()}} style={{margin:"10px"}}>
+                Login
+            </Button>
+        </React.Fragment>
+    ) 
 
-        //                 </CInputGroup>
-        //                 <h6 color='white'>Password
-        //                 </h6> 
-        //                 <CInputGroup>
-                
-        //                 <CInput
-        //                     type="password"
-        //                     name = "password"
-        //                     placeholder="Password"
-        //                     autoComplete="username"
-        //                     onChange={handleEvent}
-        //                     value={logininfo.password}
-        //                 />
-        //                 </CInputGroup>
-        //                 <br></br>
-        //                 <CButton
-        //                 onClick={handleSubmit}
-        //                 color="primary"
-        //                 className="px-4"
-        //                 >
-        //                 Login
-        //                 </CButton>
-        //                 <br></br><br></br>
-        //                 {error && (
-        //                 <>
-        //                     <CAlert color="danger" closeButton>
-        //                     {error}
-        //                     </CAlert>
-        //                 </>
-        //                 )}
-        //                 {loading && 
-        //                 <center>
-        //                 <CSpinner
-        //                 style={{width:'4rem', height:'4rem', marginTop: "20px", marginBottom: "20px"}}
-        //                 color="success"
-        //                 variant="grow"
-        //             />
-        //             </center>
-        //                 }
-                    
-        //             </CForm>
-        //             </CCardBody>
-        //         </CCard>
-        //         </CCardGroup>
-        //     </CCol>
-        //     </CRow>
-        // </CContainer>
-        // </div>
-        // </>
+    return (
+        <>
+        <Modal style={{top: "22%"}} width={"550px"} bodyStyle={{minHeight:"140px"}} title="Log In" visible={props.open} 
+                    onOk={() => {props.setOpen(false)}} onCancel={() => {props.setOpen(false)}}
+                    footer={footer}>
+                <Form name="basic" style={{height:"30px"}}>
+                    <Form.Item
+                        label="Username"
+                        name="Username"
+                    >
+                        <Input onChange={(e) => {setUsername(e.target.value)}}/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Password"
+                        name="Password"
+                    >
+                        <Input onChange={(e) => {setPassword(e.target.value)}}/>
+                    </Form.Item>
+                </Form>
+            </Modal> 
+        </>
     );
 };
 

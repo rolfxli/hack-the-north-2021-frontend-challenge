@@ -33,7 +33,6 @@ async function _getAllEvents() {
 }
 
 export async function getPublicEvents() {
-    console.log("before")
     const data = await _getAllEvents();
     var rawEvents = data;
     console.log(rawEvents);
@@ -52,13 +51,8 @@ export async function getPublicEvents() {
 export async function getPrivateEvents() {
     console.log("before private")
     const data = await _getAllEvents();
-    var rawEvents = data.events;
-    var events = [];
-    rawEvents.forEach(item => {
-        if (item.permission == "private") {
-            events.push(item);
-        }
-    })
+    var rawEvents = data;
+    var events = rawEvents; 
     events.sort(function(a, b) {
         return a.start_time - b.start_time;
     });
