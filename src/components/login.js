@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { handleLogin } from '../utils/auth';
-import {Card, PageHeader, Button, Modal, Form, Input, Alert} from 'antd';
+import { Button, Modal, Form, Input } from 'antd';
 
 const Login = (props) => {
     const history = useHistory();
@@ -23,22 +23,24 @@ const Login = (props) => {
         if (username !== "" && password !== "") {
             var res = handleLogin(username, password);
             if (res) {
-                //props.setRefresh(!props.refresh);
                 history.push("/events");
-                props.refreshPage();
+                window.location.reload();
             } else {
                 setError("Invalid Username or Password")
-                setLoading(false)
+                setLoading(false) 
             }
         }
     }
 
+    /**
+     * custom footer for login modal
+     */
     let footer = (
         <React.Fragment>
-            <Button key="back" onClick={() => {props.setOpen(false)}} style={{margin:"10px"}}>
+            <Button key="back" shape="round" onClick={() => {props.setOpen(false)}} style={{margin:"10px"}}>
                 Cancel
             </Button>
-            <Button type="primary" key="back" onClick={() => {props.setOpen(false); handleSubmit()}} style={{margin:"10px"}}>
+            <Button type="primary" shape="round" key="back" onClick={() => {props.setOpen(false); handleSubmit()}} style={{margin:"10px"}}>
                 Login
             </Button>
         </React.Fragment>

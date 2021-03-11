@@ -7,7 +7,7 @@ import cookie from "js-cookie";
  * username and password since we hardcode these values
 */
 export function handleLogin(username, password) {
-    if (username == "admin" && password == "demoPassword") {
+    if (username == "admin" && password == "password") {
         cookie.set("username", username);
         cookie.set("token", "validToken");
         return true;
@@ -15,6 +15,11 @@ export function handleLogin(username, password) {
     return false;
 }
 
+/*
+ * handle logging out a user
+ *
+ * clear the cookies for the token and username
+*/
 export function handleLogout() {
   cookie.remove("token");
   cookie.remove("username");
