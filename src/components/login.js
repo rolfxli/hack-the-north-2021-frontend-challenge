@@ -25,6 +25,7 @@ const Login = (props) => {
                 window.location.reload();
             } else {
                 setError("Invalid Username or Password")
+                alert("Invalid Username or Password")
                 console.log(error);
             }
         }
