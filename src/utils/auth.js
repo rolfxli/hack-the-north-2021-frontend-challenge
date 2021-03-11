@@ -7,7 +7,7 @@ import cookie from "js-cookie";
  * username and password since we hardcode these values
 */
 export function handleLogin(username, password) {
-    if (username == "admin" && password == "password") {
+    if (username === "admin" && password === "password") {
         cookie.set("username", username);
         cookie.set("token", "validToken");
         return true;

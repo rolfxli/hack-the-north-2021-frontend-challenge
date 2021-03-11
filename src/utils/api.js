@@ -8,12 +8,12 @@ async function getEvents() {
     // with a real backend a JWT token would be saved
     // and would need to be authenticated
     var status = cookie.get("token");
-    if ((status == null) || status != "validToken") {
+    if ((status == null) || status !== "validToken") {
         var events = await getPublicEvents();
         return events;
     } else {
-        var events = await getPrivateEvents();
-        return events;
+        var privEvents = await getPrivateEvents();
+        return privEvents;
     }
 }
 

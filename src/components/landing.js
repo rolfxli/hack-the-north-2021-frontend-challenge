@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from "./login"
 import { PageHeader, Button } from 'antd';
 import { useHistory } from "react-router-dom";
@@ -7,6 +7,10 @@ import { useHistory } from "react-router-dom";
 const Landing = () => {
     const [loginOpen, setLoginOpen] = useState(false);
     const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => {
+        setRefresh(false);
+    }, []);
 
     const history = useHistory();
 

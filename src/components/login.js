@@ -9,7 +9,6 @@ const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
     /*
     * handle logging in a user
@@ -19,7 +18,6 @@ const Login = (props) => {
     */
     async function handleSubmit() {
         setError("")
-        setLoading(true)
         if (username !== "" && password !== "") {
             var res = handleLogin(username, password);
             if (res) {
@@ -27,7 +25,7 @@ const Login = (props) => {
                 window.location.reload();
             } else {
                 setError("Invalid Username or Password")
-                setLoading(false) 
+                console.log(error);
             }
         }
     }

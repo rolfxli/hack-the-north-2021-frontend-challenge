@@ -39,7 +39,7 @@ export async function getPublicEvents() {
     var events = [];
     // only save the public events
     rawEvents.forEach(item => {
-        if (item.permission == "public") {
+        if (item.permission === "public") {
             events.push(item);
         }
     })

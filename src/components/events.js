@@ -54,7 +54,7 @@ const Events = () => {
     /** provide the private link if logged in */
     function getLink(privateURL, publicURL) {
         var res = cookie.get("token");
-        if (res == null || res != "validToken") {
+        if (res == null || res !== "validToken") {
             return publicURL;
         }
         return privateURL;
@@ -123,7 +123,7 @@ const Events = () => {
                             <div className='floatleft'>
                             <div className='speakerName' style={eventStyles.noSpaceStyle}>{speaker.name}</div>
                             <div>
-                                <img src={getPfpLink(speaker.profile_pic)} style={pfpStyle} width="100" height="100"/>
+                                <img src={getPfpLink(speaker.profile_pic)} style={pfpStyle} width="100" height="100" alt="pfp" />
                             </div>
                             </div></>)}
                         </div>
